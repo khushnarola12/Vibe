@@ -1,8 +1,9 @@
-import React from 'react'
 
-const Page = () => {
+const Page = async() => {
   return (
-    <div>Page</div>
+    <div>
+      Hello
+    </div>
   )
 }
 
