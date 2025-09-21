@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import {Form,FormField} from "@/components/ui/form"
 import { useRouter } from "next/navigation"
 import { PROJECT_TEMPLATES } from "../../constants"
+import { useClerk } from "@clerk/nextjs"
 
 const formSchema = z.object({
     value: z.string()
@@ -23,6 +24,7 @@ export const ProjectForm = ()=>{
     const router = useRouter()
     const [isFocused,setIsFocused] = useState(false)
     const showUsage = false
+    const clerk = useClerk()
 
     const onSelect = (value:string)=>{
         form.setValue("value",value,{
@@ -49,6 +51,9 @@ export const ProjectForm = ()=>{
             router.push(`/projects/${data.id}`)
         },
         onError:(error)=>{
+            if(error.data?.code==="UNAUTHORIZED"){
+                clerk.openSignIn()
+            }
             toast.error(error.message)
         }
     }))
