@@ -4,6 +4,14 @@ import {dark} from "@clerk/themes"
 
 import { useCurrentTheme } from '@/hooks/use-current-theme'
 
+/**
+ * Client-side page that renders Clerk's SignUp form with theme-aware appearance.
+ *
+ * Applies the dark base theme when the current theme is `'dark'` and customizes
+ * the SignUp `cardBox` element with border, no shadow, and rounded corners.
+ *
+ * @returns The rendered SignUp page component.
+ */
 export default function Page() {
   const currentTheme = useCurrentTheme()
   return (

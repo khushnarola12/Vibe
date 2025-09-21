@@ -4,6 +4,15 @@ import {dark} from "@clerk/themes"
 
 import { useCurrentTheme } from '@/hooks/use-current-theme'
 
+/**
+ * Client-side page that renders Clerk's SignIn UI with theme-aware appearance.
+ *
+ * Uses `useCurrentTheme()` to determine whether to apply the dark `baseTheme` to Clerk's SignIn.
+ * The SignIn appearance also overrides `elements.cardBox` to apply border, no shadow, and rounded corners.
+ * The component centers the sign-in form within a responsive container and provides top padding.
+ *
+ * @returns The page's JSX element containing the themed SignIn component.
+ */
 export default function Page() {
   const currentTheme = useCurrentTheme()
   return (
