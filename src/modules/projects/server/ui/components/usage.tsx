@@ -4,6 +4,7 @@ import { formatDuration,intervalToDuration } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
+import { useMemo } from "react";
 
 
 interface Props{
@@ -12,6 +13,23 @@ interface Props{
 }
 
 export const Usage=({points,msBeforeNext}:Props)=>{
+
+    const resetTime = useMemo(()=>
+    {
+        try {
+            return formatDuration(
+                intervalToDuration({
+                     start :new Date(),
+                end:new Date(Date.now()+msBeforeNext)
+                })
+            )
+           
+            
+        } catch (error) {
+            console.error("Error formatting duration",error)
+            return "unknown"
+        }
+    },[msBeforeNext])
 
     const {has} = useAuth()
     const hasProAccess = has?.({plan:'pro'})
@@ -24,12 +42,7 @@ export const Usage=({points,msBeforeNext}:Props)=>{
                     </p>
                     <p className="text-xs text-muted-foreground">
                         Reset in{" "}
-                        {formatDuration(intervalToDuration({
-                            start:new Date(),
-                            end:new Date(Date.now()+msBeforeNext)
-                        }),
-                        {format:["days","hours","minutes"]}
-                        )}
+                        {resetTime}
                     </p>
                 </div>
                 {hasProAccess ? " " : <Button
