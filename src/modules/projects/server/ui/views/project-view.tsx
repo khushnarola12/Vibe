@@ -40,126 +40,172 @@ export const Projectview = ({ projectId }: Props) => {
 
   if (isMobile) {
     return (
-      <div className="h-screen flex flex-col">
-        <div className="flex-1 min-h-0">
-          <Suspense fallback={<p>Loading Project....</p>}>
+      <div className="h-screen flex flex-col bg-background">
+        {/* Header */}
+        <div className="flex-shrink-0">
+          <Suspense fallback={<div className="h-12 bg-background animate-pulse" />}>
             <ProjectHeader projectId={projectId} />
           </Suspense>
-          <Suspense fallback={<p>Loading messages...</p>}>
-            <MessagesContainer
-              projectId={projectId}
-              activeFragment={activeFragment}
-              setActiveFragment={setActiveFragment}
-            />
-          </Suspense>
         </div>
-        {activeFragment && (
-          <div className="border-t bg-background">
+        
+        {/* Main Content Area */}
+        <div className="flex-1 min-h-0 flex flex-col">
+          {/* Messages Section */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <Suspense fallback={<div className="h-full flex items-center justify-center text-muted-foreground">Loading messages...</div>}>
+              <MessagesContainer
+                projectId={projectId}
+                activeFragment={activeFragment}
+                setActiveFragment={setActiveFragment}
+              />
+            </Suspense>
+          </div>
+          
+          {/* Output Section - Only show when there's an active fragment */}
+          {activeFragment && (
+            <div className="border-t bg-background shadow-lg">
+              <Tabs
+                className="h-80 flex flex-col"
+                defaultValue="preview"
+                value={tabState}
+                onValueChange={(value) => setTabState(value as "preview" | "code")}
+              >
+                {/* Tab Header */}
+                <div className="flex-shrink-0 w-full flex items-center p-3 border-b bg-muted/30 gap-x-2">
+                  <TabsList className="h-9 p-0 border rounded-lg bg-background">
+                    <TabsTrigger value="preview" className="rounded-lg text-sm px-3">
+                      <EyeIcon className="w-4 h-4 mr-2" />
+                      <span>Preview</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="code" className="rounded-lg text-sm px-3">
+                      <CodeIcon className="w-4 h-4 mr-2" />
+                      <span>Code</span>
+                    </TabsTrigger>
+                  </TabsList>
+                  <div className="ml-auto flex items-center gap-x-2">
+                    {!hasProAccess && ( 
+                      <Button asChild size="sm" variant="default" className="text-xs h-8">
+                        <Link href="/pricing">
+                          <CrownIcon className="w-3 h-3 mr-1" /> 
+                          <span>Upgrade</span>
+                        </Link>
+                      </Button>
+                    )}
+                    <UserControl/>
+                  </div>
+                </div>
+                
+                {/* Tab Content */}
+                <div className="flex-1 min-h-0 overflow-hidden">
+                  <TabsContent value="preview" className="h-full m-0 overflow-hidden">
+                    <FragmentWeb data={activeFragment} />
+                  </TabsContent>
+                  <TabsContent value="code" className="h-full m-0 overflow-hidden">
+                    {!!activeFragment?.files && (
+                      <FileExplorer files={activeFragment.files as {[path:string] :string}}/>
+                    )}
+                  </TabsContent>
+                </div>
+              </Tabs>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen bg-background">
+      <ResizablePanelGroup direction="horizontal">
+        {/* Left Panel - Messages */}
+        <ResizablePanel
+          minSize={25}
+          defaultSize={40}
+          className="flex flex-col min-h-0 bg-background"
+        >
+          <div className="flex-shrink-0">
+            <Suspense fallback={<div className="h-14 bg-background animate-pulse" />}>
+              <ProjectHeader projectId={projectId} />
+            </Suspense>
+          </div>
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <Suspense fallback={<div className="h-full flex items-center justify-center text-muted-foreground">Loading messages...</div>}>
+              <MessagesContainer
+                projectId={projectId}
+                activeFragment={activeFragment}
+                setActiveFragment={setActiveFragment}
+              />
+            </Suspense>
+          </div>
+        </ResizablePanel>
+        
+        <ResizableHandle className="hover:bg-primary transition-colors w-1 bg-border" />
+        
+        {/* Right Panel - Output */}
+        <ResizablePanel className="bg-background" minSize={35} defaultSize={60}>
+          <div className="h-full flex flex-col">
             <Tabs
-              className="h-64"
+              className="h-full flex flex-col"
               defaultValue="preview"
               value={tabState}
               onValueChange={(value) => setTabState(value as "preview" | "code")}
             >
-              <div className="w-full flex items-center p-2 border-b gap-x-2">
-                <TabsList className="h-8 p-0 border rounded-md">
-                  <TabsTrigger value="preview" className="rounded-md text-xs">
-                    <EyeIcon className="w-3 h-3" />
-                    <span className="hidden sm:inline">Preview</span>
+              {/* Tab Header */}
+              <div className="flex-shrink-0 w-full flex items-center p-4 border-b bg-muted/30 gap-x-3">
+                <TabsList className="h-9 p-0 border rounded-lg bg-background">
+                  <TabsTrigger value="preview" className="rounded-lg text-sm px-4">
+                    <EyeIcon className="w-4 h-4 mr-2" />
+                    <span>Preview</span>
                   </TabsTrigger>
-                  <TabsTrigger value="code" className="rounded-md text-xs">
-                    <CodeIcon className="w-3 h-3" />
-                    <span className="hidden sm:inline">Code</span>
+                  <TabsTrigger value="code" className="rounded-lg text-sm px-4">
+                    <CodeIcon className="w-4 h-4 mr-2" />
+                    <span>Code</span>
                   </TabsTrigger>
                 </TabsList>
-                <div className="ml-auto flex items-center gap-x-2">
+                <div className="ml-auto flex items-center gap-x-3">
                   {!hasProAccess && ( 
-                    <Button asChild size="sm" variant="default" className="text-xs">
+                    <Button asChild size="sm" variant="default" className="text-sm">
                       <Link href="/pricing">
-                        <CrownIcon className="w-3 h-3" /> 
-                        <span className="hidden sm:inline">Upgrade</span>
+                        <CrownIcon className="w-4 h-4 mr-2" /> 
+                        <span>Upgrade</span>
                       </Link>
                     </Button>
                   )}
                   <UserControl/>
                 </div>
               </div>
-              <TabsContent value="preview" className="h-full">
-                <FragmentWeb data={activeFragment} />
-              </TabsContent>
-              <TabsContent value="code" className="h-full min-h-0">
-                {!!activeFragment?.files && (
-                  <FileExplorer files={activeFragment.files as {[path:string] :string}}/>
-                )}
-              </TabsContent>
+              
+              {/* Tab Content */}
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <TabsContent value="preview" className="h-full m-0 overflow-hidden">
+                  {!!activeFragment ? (
+                    <FragmentWeb data={activeFragment} />
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-muted-foreground bg-muted/20">
+                      <div className="text-center">
+                        <EyeIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p className="text-lg font-medium">No Preview Available</p>
+                        <p className="text-sm">Select a message with output to see the preview</p>
+                      </div>
+                    </div>
+                  )}
+                </TabsContent>
+                <TabsContent value="code" className="h-full m-0 overflow-hidden">
+                  {!!activeFragment?.files ? (
+                    <FileExplorer files={activeFragment.files as {[path:string] :string}}/>
+                  ) : (
+                    <div className="h-full flex items-center justify-center text-muted-foreground bg-muted/20">
+                      <div className="text-center">
+                        <CodeIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p className="text-lg font-medium">No Code Available</p>
+                        <p className="text-sm">Select a message with code to see the files</p>
+                      </div>
+                    </div>
+                  )}
+                </TabsContent>
+              </div>
             </Tabs>
           </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-screen">
-      <ResizablePanelGroup direction="horizontal">
-        <ResizablePanel
-          minSize={20}
-          defaultSize={35}
-          className="flex flex-col min-h-0"
-        >
-          <Suspense fallback={<p>Loading Project....</p>}>
-            <ProjectHeader projectId={projectId} />
-          </Suspense>
-          <Suspense fallback={<p>Loading messages...</p>}>
-            <MessagesContainer
-              projectId={projectId}
-              activeFragment={activeFragment}
-              setActiveFragment={setActiveFragment}
-            />
-          </Suspense>
-        </ResizablePanel>
-        <ResizableHandle className="hover:bg-primary transition-colors" />
-        <ResizablePanel className="p-4" minSize={50} defaultSize={65}>
-          <Tabs
-            className="h-full gap-y-4"
-            defaultValue="preview"
-            value={tabState}
-            onValueChange={(value) => setTabState(value as "preview" | "code")}
-          >
-            <div className="w-full flex items-center p-2 border-b gap-x-2">
-              <TabsList className="h-8 p-0 border rounded-md">
-                <TabsTrigger value="preview" className="rounded-md text-sm">
-                  <EyeIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">Preview</span>
-                </TabsTrigger>
-                <TabsTrigger value="code" className="rounded-md text-sm">
-                  <CodeIcon className="w-4 h-4" />
-                  <span className="hidden sm:inline">Code</span>
-                </TabsTrigger>
-              </TabsList>
-              <div className="ml-auto flex items-center gap-x-2">
-                {!hasProAccess && ( 
-                  <Button asChild size="sm" variant="default" className="text-sm">
-                    <Link href="/pricing">
-                      <CrownIcon className="w-4 h-4" /> 
-                      <span className="hidden sm:inline">Upgrade</span>
-                    </Link>
-                  </Button>
-                )}
-               
-                <UserControl/>
-              </div>
-
-            </div>
-            <TabsContent value="preview">
-              {!!activeFragment && <FragmentWeb data={activeFragment} />}
-            </TabsContent>
-            <TabsContent value="code" className="min-h-0">
-             {!!activeFragment?.files && (
-              <FileExplorer files={activeFragment.files as {[path:string] :string}}/>
-             )}
-            </TabsContent>
-          </Tabs>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

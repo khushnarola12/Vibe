@@ -50,9 +50,9 @@ export const MessagesContainer = ({
   const lastMessage = messages[messages.length-1]
   const isLastMessageUser = lastMessage?.role==="USER"
   return (
-    <div className="flex flex-col flex-1 min-h-0">
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className="pt-2 pr-1">
+    <div className="flex flex-col h-full">
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+        <div className="pt-2 pr-2 pb-2">
           {messages.map((message) => (
             <MessageCard
               key={message.id}
@@ -69,7 +69,7 @@ export const MessagesContainer = ({
           {isLastMessageUser && <MessageLoading/>}
         </div>
       </div>
-      <div className="relative p-3 pt-1">
+      <div className="flex-shrink-0 relative p-3 pt-1 border-t bg-background">
         <div className="absolute -top-6 left-0 right-0 h-6 bg-gradient-to-b from-transparent to-background pointer-events-none"/> 
         <MessageForm projectId={projectId}/>
       </div>
