@@ -46,32 +46,32 @@ export const ProjectHeader = ({ projectId }: Props) => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-14 items-center justify-between px-4">
+      <div className="flex h-12 sm:h-14 items-center justify-between px-3 sm:px-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
+              className="flex items-center gap-2 sm:gap-2.5 px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-colors"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <Image 
                   src="/logo.svg" 
                   alt="Vibe" 
-                  width={20} 
-                  height={20}
-                  className="shrink-0"
+                  width={18} 
+                  height={18}
+                  className="shrink-0 sm:w-5 sm:h-5"
                 />
-                <span className="truncate max-w-[200px]">{project.name}</span>
+                <span className="truncate max-w-[120px] sm:max-w-[200px]">{project.name}</span>
               </div>
-              <ChevronDown className="size-4 opacity-60" />
+              <ChevronDown className="size-3 sm:size-4 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
             side="bottom"
             align="start"
-            className="min-w-[220px] rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+            className="min-w-[200px] sm:min-w-[220px] rounded-lg border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
             sideOffset={8}
           >
             <DropdownMenuItem asChild>

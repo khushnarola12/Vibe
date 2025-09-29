@@ -9,22 +9,26 @@ const Page = ()=>{
 
     const currentTheme = useCurrentTheme()
     return(
-        <div className="flex flex-col max-w-3xl mx-auto w-full">
-            <section className="space-y-6 pt-[16vh] 2xl:pt-48">
+        <div className="flex flex-col max-w-4xl mx-auto w-full px-4">
+            <section className="space-y-4 sm:space-y-6 py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 2xl:py-32">
             <div className="flex flex-col items-center">
                 <Image src="/logo.svg" alt="logo vibe" height={50} width={50} className="hidden md:block"/>
             </div>
-            <h1 className="text-xl md:text-3xl font-bold text-center">Pricing</h1>
-            <p className="text-muted-foreground text-center text-sm md:text-base">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center">Pricing</h1>
+            <p className="text-muted-foreground text-center text-base sm:text-lg max-w-2xl mx-auto">
                 Choose the plan that fits your needs
             </p>
-            <PricingTable
-                appearance={{
-                    baseTheme:currentTheme==='dark' ? dark : undefined,
-                    elements:{
-                        pricingTableCard:"border! shadow-none! rounded-lg!"
-                    }
-                }}/>
+            <div className="w-full">
+                <PricingTable
+                    appearance={{
+                        baseTheme:currentTheme==='dark' ? dark : undefined,
+                        elements:{
+                            pricingTableCard:"border! shadow-none! rounded-lg!",
+                            pricingTableCardContainer:"flex flex-col sm:flex-row gap-4!",
+                            pricingTableCardContent:"p-4 sm:p-6!"
+                        }
+                    }}/>
+            </div>
             </section>
         </div>
     )
